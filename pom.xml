@@ -7,7 +7,7 @@
     <groupId>org.projectodd.openwhisk</groupId>
     <artifactId>incubator-openwhisk-client-java</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <packaging>pom</packaging>
 
     <properties>
         <okclient.version>3.10.0</okclient.version>
@@ -22,79 +22,7 @@
 
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>src/main/resources/apiv1swagger.json</inputSpec>
-                            <language>java</language>
-                            <modelPackage>${package.root}.model</modelPackage>
-                            <apiPackage>${package.root}.api</apiPackage>
-                            <invokerPackage>${package.root}.invoker</invokerPackage>
-                            <configOptions>
-                                <library>jersey2</library>
-                                <dateLibrary>java8</dateLibrary>
-                                <useRuntimeException>true</useRuntimeException>
-                            </configOptions>
-                            <!--<configHelp>true</configHelp>-->
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger.annotations.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.5.redhat-001</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.25.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.25.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>2.25.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.9.0.redhat-3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.8.11.redhat-1</version>
-        </dependency>
-
-    </dependencies>
+    <modules>
+        <module>client</module>
+    </modules>
 </project>
