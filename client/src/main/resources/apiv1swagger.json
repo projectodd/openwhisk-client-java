@@ -192,11 +192,7 @@
                         "in": "query",
                         "description": "Overwrite item if it exists. Default is false.",
                         "required": false,
-                        "type": "string",
-                        "enum": [
-                            "true",
-                            "false"
-                        ]
+                        "type": "boolean"
                     },
                     {
                         "name": "action",
@@ -482,11 +478,7 @@
                         "in": "query",
                         "description": "Overwrite item if it exists. Default is false.",
                         "required": false,
-                        "type": "string",
-                        "enum": [
-                            "true",
-                            "false"
-                        ]
+                        "type": "boolean"
                     },
                     {
                         "name": "rule",
@@ -744,11 +736,7 @@
                         "in": "query",
                         "description": "Overwrite item if it exists. Default is false.",
                         "required": false,
-                        "type": "string",
-                        "enum": [
-                            "true",
-                            "false"
-                        ]
+                        "type": "boolean"
                     },
                     {
                         "name": "trigger",
@@ -1014,11 +1002,7 @@
                         "in": "query",
                         "description": "Overwrite item if it exists. Default is false.",
                         "required": false,
-                        "type": "string",
-                        "enum": [
-                            "true",
-                            "false"
-                        ]
+                        "type": "boolean"
                     },
                     {
                         "name": "package",
@@ -1499,6 +1483,10 @@
                 "init": {
                     "type": "string",
                     "description": "optional zipfile reference when code kind is 'nodejs'"
+                },
+                "main": {
+                    "type": "string",
+                    "description": "optional main class when code kind is 'java'"
                 }
             },
             "description": "definition of the action, such as javascript code or the name of a container"
@@ -2004,7 +1992,7 @@
         "UpdatedItem": {
             "description": "Updated Item",
             "schema": {
-                "$ref": "#/definitions/ItemId"
+                "$ref": "#/definitions/ActionPut"
             }
         },
         "DeletedItem": {

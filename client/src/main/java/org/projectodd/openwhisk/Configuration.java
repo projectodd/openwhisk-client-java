@@ -10,6 +10,7 @@ public class Configuration {
     private static final String DEFAULT_HOST = "localhost";
     private static final String API_PORT = "APIPORT";
     private static final int DEFAULT_PORT = 443;
+    private static final int DEFAULT_TIMEOUT = 30000;
     private static final String AUTH = "AUTH";
     private static final String DEFAULT_NAMESPACE = "_";
     private static final String DEFAULT_PROPS = ".wskprops";
@@ -22,18 +23,20 @@ public class Configuration {
     private String namespace = DEFAULT_NAMESPACE;
     private String actionPackage = "";
     private boolean insecure = false;
+    private int timeout = DEFAULT_TIMEOUT;
 
     private Configuration() {
     }
 
     private Configuration(final String host, final int port, final String auth, final String namespace, final String actionPackage,
-                          boolean insecure) {
+                          boolean insecure, final int timeout) {
         this.host = host;
         this.port = port;
         this.auth = auth;
         this.namespace = namespace;
         this.actionPackage = actionPackage;
         this.insecure = insecure;
+        this.timeout = timeout;
     }
 
     public String getHost() {
@@ -97,6 +100,7 @@ public class Configuration {
         private String host = DEFAULT_HOST;
         private boolean insecure;
         private int port = DEFAULT_PORT;
+        private int timeout = DEFAULT_TIMEOUT;
         private String auth;
         private String namespace = DEFAULT_NAMESPACE;
         private String actionPackage = DEFAULT_ACTION_PACKAGE;
@@ -127,6 +131,10 @@ public class Configuration {
             this.port = port;
             return this;
         }
+        public Builder timeout(int timeout) {
+            this.timeout = timeout;
+            return this;
+        }
 
         public Builder auth(String auth) {
             this.auth = auth;
@@ -144,7 +152,7 @@ public class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(host, port, auth, namespace, actionPackage, insecure);
+            return new Configuration(host, port, auth, namespace, actionPackage, insecure, timeout);
         }
     }
 }

@@ -1,20 +1,66 @@
 package org.projectodd.openwhisk;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.projectodd.Echo;
+import org.projectodd.openwhisk.invoker.ApiException;
+import org.projectodd.openwhisk.model.ActionExec;
+import org.projectodd.openwhisk.model.ActionExec.KindEnum;
+import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.Activation;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 public class OWskClientTest {
-    @Test
-    public void client() {
-        final OWskClient client = new OWskClient();
+    final OWskClient client = new OWskClient();
+
+    public OWskClientTest() {
         client.configure(client.getConfiguration()
                                .from()
                                .insecure(true)
                                .build());
+    }
+
+    @Test(expectedExceptions = ApiException.class)
+    public void deleteNonExistent() {
+        try {
+            client.actions().delete("echo");
+        } catch (ApiException ignore) {
+        }
+        client.actions().delete("echo");
+    }
+
+    @Test
+    public void delete() {
+        try {
+            client.actions().delete("echo");
+        } catch (ApiException ignore) {
+        }
+    }
+
+    @Test(dependsOnMethods = "delete")
+    public void create() {
+        Assert.assertNotNull(client.actions().create("echo",
+            new ActionExec()
+                .code("../functions/target/echo.jar")
+                .main(Echo.class.getName())
+                .kind(KindEnum.JAVA)));
+    }
+
+    @Test(dependsOnMethods = "delete")
+    public void update() {
+        Assert.assertNotNull(client.actions().update("echo",
+            new ActionPut()
+                .exec(new ActionExec()
+                          .code("../functions/target/echo.jar")
+                          .main(Echo.class.getName())
+                          .kind(KindEnum.JAVA)),
+            true));
+    }
+
+    @Test(dependsOnMethods = "create")
+    public void invoke() {
         Map<String, String> params = new TreeMap<>();
         params.put("test", "hello");
 

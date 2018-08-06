@@ -1,32 +1,68 @@
 package org.projectodd.openwhisk;
 
 import org.projectodd.openwhisk.api.ActionsApi;
+import org.projectodd.openwhisk.invoker.ApiException;
+import org.projectodd.openwhisk.model.ActionExec;
+import org.projectodd.openwhisk.model.ActionExec.KindEnum;
+import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.Activation;
-import org.projectodd.openwhisk.model.KeyValue;
 
 import java.util.Collections;
 import java.util.Map;
 
+import static java.lang.Math.min;
+
 public class Actions {
 
-    private OWskClient OWskClient;
+    private OWskClient client;
 
-    public Actions(final OWskClient OWskClient) {
-        this.OWskClient = OWskClient;
+    public Actions(final OWskClient client) {
+        this.client = client;
     }
 
     /**
      * Create a new action
+     * @param name
+     * @param exec
      */
-    public void create() {
-        throw new UnsupportedOperationException("method not yet implemented");
+    public ActionPut create(final String name, final ActionExec exec) {
+        return update(name, new ActionPut().exec(exec), false);
+    }
+
+    /**
+     * Create a new action
+     * @param name
+     * @param actionPut
+     */
+    public ActionPut create(final String name, final ActionPut actionPut) {
+        return update(name, actionPut, false);
+    }
+
+    /**
+     * Update an action
+     * @param name
+     * @param exec
+     */
+    public ActionPut update(final String name, final ActionExec exec) {
+        return update(name, new ActionPut().exec(exec), false);
     }
 
     /**
      * Update an existing action, or create an action if it does not exist
      */
-    public void update() {
-        throw new UnsupportedOperationException("method not yet implemented");
+    public ActionPut update(final String name, final ActionPut actionPut, boolean overwrite) {
+        ActionPut put = actionPut;
+        if(actionPut.getExec().getKind() == KindEnum.JAVA) {
+            put = Utils.updatePut(actionPut);
+        }
+
+        final ActionPut result = new ActionsApi(client.getClient())
+                                         .updateAction(client.getConfiguration().getNamespace(), name, put, overwrite);
+
+        if(actionPut.getExec().getKind() == KindEnum.JAVA) {
+            result.getExec().code(actionPut.getExec().getCode());
+        }
+        return result;
     }
 
     /**
@@ -63,9 +99,9 @@ public class Actions {
      */
     @SuppressWarnings("unchecked")
     public <T> T invoke(final String name, final Map<String, String> params, InvokeOptions options) {
-        final Activation activation = new ActionsApi(OWskClient.getClient())
-                                          .invokeAction("_", name, keyValue(params), options.blocking(),
-                                              false, 30000);
+        final Activation activation = new ActionsApi(client.getClient())
+                                          .invokeAction(client.getConfiguration().getNamespace(), name, Utils.keyValue(params),
+                                              options.blocking(), false, 30000);
         if(options.results()) {
             return (T) activation.getResponse().getResult();
         } else if(options.blocking()) {
@@ -73,12 +109,6 @@ public class Actions {
         } else {
             return (T) activation.getActivationId();
         }
-    }
-
-    private KeyValue keyValue(final Map<String, String> map) {
-        final KeyValue keyValue = new KeyValue();
-        keyValue.putAll(map);
-        return keyValue;
     }
 
     /**
@@ -90,9 +120,12 @@ public class Actions {
 
     /**
      * Delete action
+     * @param name the name of the action to delete
+     * @throws ApiException if the named action does not exist
      */
-    public void delete() {
-        throw new UnsupportedOperationException("method not yet implemented");
+    public void delete(final String name) throws ApiException {
+        new ActionsApi(client.getClient())
+                   .deleteAction(client.getConfiguration().getNamespace(), name);
     }
 
     /**

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * echo FunctionApp
+ * echo Echo
  */
-public class FunctionApp {
+public class Echo {
     public static JsonObject main(JsonObject args) {
         JsonObject response = new JsonObject();
         final List<String> entries = args.entrySet().stream()
