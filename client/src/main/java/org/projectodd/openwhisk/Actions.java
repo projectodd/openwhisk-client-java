@@ -3,7 +3,6 @@ package org.projectodd.openwhisk;
 import org.projectodd.openwhisk.api.ActionsApi;
 import org.projectodd.openwhisk.invoker.ApiException;
 import org.projectodd.openwhisk.model.ActionExec;
-import org.projectodd.openwhisk.model.ActionExec.KindEnum;
 import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.Activation;
 import org.projectodd.openwhisk.model.ActivationResponse;
@@ -59,7 +58,11 @@ public class Actions {
         final ActionPut result = new ActionsApi(client.getClient())
                                      .updateAction(client.getConfiguration().getNamespace(), name, put, overwrite);
 
-        result.getExec().code(actionPut.getExec().getCode());
+        final String code = result.getExec().getCode();
+        final int length = code.length();
+        if(length > 1000) {
+            result.getExec().code(code.substring(0, Math.min(1000, length)));
+        }
         return result;
     }
 
