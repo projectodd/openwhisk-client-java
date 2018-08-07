@@ -83,6 +83,5 @@ public class OWskClientTest {
         Map results = client.actions().invoke("echo", params, new InvokeOptions().blocking(true).results(true));
         Assert.assertNotNull(results);
         Assert.assertNotNull(results.get("echoed"));
-
     }
 }

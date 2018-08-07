@@ -1321,6 +1321,9 @@
             "properties": {
                 "error": {
                     "type": "string"
+                },
+                "code": {
+                    "type": "integer"
                 }
             }
         },
