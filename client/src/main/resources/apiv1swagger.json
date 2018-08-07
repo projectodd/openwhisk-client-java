@@ -1474,7 +1474,7 @@
                 },
                 "code": {
                     "type": "string",
-                    "description": "The code to execute when kind is not 'blackbox'"
+                    "description": "The code to execute when kind is not 'blackbox'. For kinds like 'java', this is the path to the file to upload"
                 },
                 "image": {
                     "type": "string",

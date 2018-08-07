@@ -88,6 +88,10 @@ public class Configuration {
         return properties.getProperty(name, defaultValue == null ? null : defaultValue.toString());
     }
 
+    /**
+     * Creates a new builder based on the current Configuration
+     * @return the new {@link Builder}
+     */
     public Builder from() {
         return new Builder(this);
     }

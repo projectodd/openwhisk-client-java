@@ -10,8 +10,6 @@ import org.projectodd.openwhisk.model.Activation;
 import java.util.Collections;
 import java.util.Map;
 
-import static java.lang.Math.min;
-
 public class Actions {
 
     private OWskClient client;
@@ -24,6 +22,7 @@ public class Actions {
      * Create a new action
      * @param name
      * @param exec
+     * @throws ApiException if an action with the given name already exists
      */
     public ActionPut create(final String name, final ActionExec exec) {
         return update(name, new ActionPut().exec(exec), false);
@@ -123,7 +122,7 @@ public class Actions {
      * @param name the name of the action to delete
      * @throws ApiException if the named action does not exist
      */
-    public void delete(final String name) throws ApiException {
+    public void delete(final String name) {
         new ActionsApi(client.getClient())
                    .deleteAction(client.getConfiguration().getNamespace(), name);
     }

@@ -38,7 +38,7 @@ public class OWskClient {
         return configuration;
     }
 
-    public ApiClient getClient() {
+    ApiClient getClient() {
         return client;
     }
 

@@ -1,6 +1,11 @@
 # Apache OpenWhisk Java Client
 
-Java client library for the Apache OpenWhisk platform. Provides a wrapper around the OpenWhisk APIs (Swagger JSON).
+Java client library for the Apache OpenWhisk platform. Provides a wrapper around the OpenWhisk APIs (Swagger JSON).  
+
+
+*Note:* This API is under heavy development and as such certain details may change from release to release.  Please consult 
+[Changes.md](Changes.md) for details.
+ 
 
 ## Installation
 

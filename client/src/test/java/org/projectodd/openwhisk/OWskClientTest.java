@@ -48,6 +48,15 @@ public class OWskClientTest {
                 .kind(KindEnum.JAVA)));
     }
 
+    @Test(dependsOnMethods = "create", expectedExceptions = ApiException.class)
+    public void createDuplicate() {
+        Assert.assertNotNull(client.actions().create("echo",
+            new ActionExec()
+                .code("../functions/target/echo.jar")
+                .main(Echo.class.getName())
+                .kind(KindEnum.JAVA)));
+    }
+
     @Test(dependsOnMethods = "delete")
     public void update() {
         Assert.assertNotNull(client.actions().update("echo",
