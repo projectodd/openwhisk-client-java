@@ -12,16 +12,7 @@ import org.testng.annotations.Test;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class OWskClientTest {
-    final OWskClient client = new OWskClient();
-
-    public OWskClientTest() {
-        client.configure(client.getConfiguration()
-                               .from()
-                               .insecure(true)
-                               .build());
-    }
-
+public class JavaActionTests extends ClientTests {
     @Test(expectedExceptions = ApiException.class)
     public void deleteNonExistent() {
         try {
@@ -70,8 +61,7 @@ public class OWskClientTest {
 
     @Test(dependsOnMethods = "create")
     public void invoke() {
-        Map<String, String> params = new TreeMap<>();
-        params.put("test", "hello");
+        Map<String, String> params = mapOf("test", "hello");
 
         final String activationId = client.actions().invoke("echo", params);
         Assert.assertNotNull(activationId);
