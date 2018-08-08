@@ -1,3 +1,3 @@
 def main(args):
-    return {"result": args["words"].split(" ")}
+    return {"py-result": args["words"].split(" ")}
 

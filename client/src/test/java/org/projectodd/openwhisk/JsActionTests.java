@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 
-public class PythonActionTests extends ClientTests {
+public class JsActionTests extends ClientTests {
     @Test
     public void delete() {
         try {
@@ -23,14 +23,15 @@ public class PythonActionTests extends ClientTests {
     public void deploy() {
         client.actions()
               .create("splitsville", new ActionExec()
-                                         .kind(KindEnum.PYTHON_2)
-                                         .code("../functions/src/main/python/split.py"));
+                                         .kind(KindEnum.NODEJS_6)
+                                         .code("../functions/src/main/js/split.js"));
 
         final String sentence = "I'm a simple sentence.";
         final Map<String, String> words = mapOf("words", sentence);
         final Map<String, List<String>> result = client.actions().invoke("splitsville", words, new InvokeOptions()
                                                                                 .blocking(true)
                                                                                 .results(true));
-        Assert.assertEquals(result.get("py-result"), asList(sentence.split(" ")));
+        System.out.println("result.get(\"js-result\") = " + result.get("js-result"));
+        Assert.assertEquals(result.get("js-result"), asList(sentence.split(" ")));
     }
 }
