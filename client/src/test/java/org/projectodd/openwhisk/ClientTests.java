@@ -1,9 +1,11 @@
 package org.projectodd.openwhisk;
 
+import org.testng.annotations.AfterClass;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ClientTests {
+public abstract class ClientTests {
     final OWskClient client = new OWskClient();
 
     public ClientTests() {
@@ -12,6 +14,14 @@ public class ClientTests {
                                .insecure(true)
                                .build());
     }
+
+    @AfterClass
+    public void cleanUp() {
+        delete();
+    }
+
+    abstract void delete();
+
 
     protected Map<String, String> mapOf(final String... strings) {
         final Map<String, String> map = new LinkedHashMap<>();

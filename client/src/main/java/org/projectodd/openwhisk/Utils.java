@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -69,6 +70,14 @@ class Utils {
         final ActionPut newPut = copy(actionPut);
         newPut.getExec().code(encoded);
         return newPut;
+    }
+
+    static KeyValue keyValue(final String... strings) {
+        final KeyValue map = new KeyValue();
+        for (int index = 0; index < strings.length - 1; index += 2) {
+            map.put(strings[index], strings[index + 1]);
+        }
+        return map;
     }
 
     static KeyValue keyValue(final Map<String, String> map) {

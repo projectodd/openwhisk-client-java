@@ -11,10 +11,13 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 
 public class PythonActionTests extends ClientTests {
+
+    public static final String ACTION_NAME = "splitsville";
+
     @Test
     public void delete() {
         try {
-            client.actions().delete("splitsville");
+            client.actions().delete(ACTION_NAME);
         } catch (Exception ignore) {
         }
     }
@@ -22,13 +25,13 @@ public class PythonActionTests extends ClientTests {
     @Test(dependsOnMethods = "delete")
     public void deploy() {
         client.actions()
-              .create("splitsville", new ActionExec()
+              .create(ACTION_NAME, new ActionExec()
                                          .kind(KindEnum.PYTHON_2)
                                          .code("../functions/src/main/python/split.py"));
 
         final String sentence = "I'm a simple sentence.";
         final Map<String, String> words = mapOf("words", sentence);
-        final Map<String, List<String>> result = client.actions().invoke("splitsville", words, new InvokeOptions()
+        final Map<String, List<String>> result = client.actions().invoke(ACTION_NAME, words, new InvokeOptions()
                                                                                 .blocking(true)
                                                                                 .results(true));
         Assert.assertEquals(result.get("py-result"), asList(sentence.split(" ")));
