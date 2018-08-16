@@ -4,8 +4,8 @@
 
     <parent>
         <groupId>org.projectodd.openwhisk</groupId>
-        <artifactId>incubator-openwhisk-client-java</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <artifactId>openwhisk-client-java</artifactId>
+        <version>0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
