@@ -234,7 +234,6 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.5</version>
                         <executions>
-                        <executions>
                             <execution>
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
