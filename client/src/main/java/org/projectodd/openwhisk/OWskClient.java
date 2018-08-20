@@ -29,6 +29,7 @@ public class OWskClient {
             if(getConfiguration().getAuth()!= null) {
                 client.addDefaultHeader("Authorization", "Basic " + encodeString(getConfiguration().getAuth(), ISO_8859_1).base64());
             }
+            client.setUserAgent("Incubating Apache OpenWhisk Java client");
         } catch (KeyManagementException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

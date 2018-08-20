@@ -2,65 +2,49 @@ package org.projectodd.openwhisk;
 
 import org.projectodd.openwhisk.api.ActionsApi;
 import org.projectodd.openwhisk.invoker.ApiException;
-import org.projectodd.openwhisk.model.ActionExec;
+import org.projectodd.openwhisk.model.Action;
 import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.Activation;
 import org.projectodd.openwhisk.model.ActivationResponse;
-
-import java.util.Collections;
-import java.util.Map;
 
 public class Actions {
 
     private OWskClient client;
 
-    public Actions(final OWskClient client) {
+    Actions(final OWskClient client) {
         this.client = client;
     }
 
     /**
      * Create a new action
      *
-     * @param name
-     * @param exec
-     * @throws ApiException if an action with the given name already exists
+     * @param options the options to apply
      */
-    public ActionPut create(final String name, final ActionExec exec) {
-        return update(name, new ActionPut().exec(exec), false);
-    }
-
-    /**
-     * Create a new action
-     *
-     * @param name
-     * @param actionPut
-     */
-    public ActionPut create(final String name, final ActionPut actionPut) {
-        return update(name, actionPut, false);
-    }
-
-    /**
-     * Update an action
-     *
-     * @param name
-     * @param exec
-     */
-    public ActionPut update(final String name, final ActionExec exec) {
-        return update(name, new ActionPut().exec(exec), false);
+    public ActionPut create(final ActionOptions options) {
+        return doUpdate(options.overwrite(false));
     }
 
     /**
      * Update an existing action, or create an action if it does not exist
+     * @param options the options to apply
      */
-    public ActionPut update(final String name, final ActionPut actionPut, boolean overwrite) {
-        ActionPut put = Utils.encodeFile(actionPut);
+    public ActionPut update(final ActionOptions options) {
+        return doUpdate(options.overwrite(true));
+    }
+
+    /**
+     * Update an existing action, or create an action if it does not exist
+     * @param options the options to apply
+     */
+    private ActionPut doUpdate(final ActionOptions options) {
+        ActionPut put = Utils.encodeFile(options.toActionPut());
 
         final ActionPut result = new ActionsApi(client.getClient())
-                                     .updateAction(client.getConfiguration().getNamespace(), name, put, overwrite);
+                                     .updateAction(client.getConfiguration().getNamespace(), options.name(), put, options.overwrite());
 
         final String code = result.getExec().getCode();
         final int length = code.length();
-        if(length > 1000) {
+        if (length > 1000) {
             result.getExec().code(code.substring(0, Math.min(1000, length)));
         }
         return result;
@@ -69,37 +53,15 @@ public class Actions {
     /**
      * Invoke an action
      *
-     * @param name the name of the action
-     * @return the invocation response
-     */
-    public <T> T invoke(final String name) {
-        return invoke(name, Collections.emptyMap(), new InvokeOptions());
-    }
-
-    /**
-     * Invoke an action
-     *
-     * @param name   the name of the action
-     * @param params the parameters to pass to the action
-     * @return the invocation response
-     */
-    public <T> T invoke(final String name, final Map<String, String> params) {
-        return invoke(name, params, new InvokeOptions());
-    }
-
-    /**
-     * Invoke an action
-     *
-     * @param name    the name of the action
-     * @param params  the parameters to pass to the action
      * @param options the options to apply
      * @return the invocation response
      */
     @SuppressWarnings("unchecked")
-    public <T> T invoke(final String name, final Map<String, String> params, InvokeOptions options) {
+    public <T> T invoke(InvokeOptions options) {
+
         final Activation activation = new ActionsApi(client.getClient())
-                                          .invokeAction(client.getConfiguration().getNamespace(), name, Utils.keyValue(params),
-                                              options.blocking(), false, 30000);
+                                          .invokeAction(client.getConfiguration().getNamespace(), options.name(), options.parameters(),
+                                              options.blocking(), false, options.timeout());
         if (options.results()) {
             final ActivationResponse response = activation.getResponse();
             return (T) response.getResult();
@@ -112,9 +74,14 @@ public class Actions {
 
     /**
      * Get an action
+     *
+     * @param name the name of the action to fetch
+     * @param includeCode true if the code content of the action is to be included in the returned value
      */
-    public void get() {
-        throw new UnsupportedOperationException("method not yet implemented");
+    public Action get(final String name, final boolean includeCode) {
+        return new ActionsApi(client.getClient())
+                   .getActionByName(client.getConfiguration().getNamespace(), name, includeCode);
+
     }
 
     /**

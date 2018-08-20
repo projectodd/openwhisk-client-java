@@ -25,15 +25,16 @@ public class JsActionTests extends ClientTests {
     @Test(dependsOnMethods = "delete")
     public void deploy() {
         client.actions()
-              .create(ACTION_NAME, new ActionExec()
-                                         .kind(KindEnum.NODEJS_6)
-                                         .code("../functions/src/main/js/split.js"));
+              .create(new ActionOptions(ACTION_NAME)
+                          .kind(KindEnum.NODEJS_6)
+                          .code("../functions/src/main/js/split.js"));
 
         final String sentence = "I'm a simple sentence.";
-        final Map<String, String> words = mapOf("words", sentence);
-        final Map<String, List<String>> result = client.actions().invoke(ACTION_NAME, words, new InvokeOptions()
-                                                                                .blocking(true)
-                                                                                .results(true));
+        final Map<String, Object> words = mapOf("words", sentence);
+        final Map<String, List<String>> result = client.actions().invoke(new InvokeOptions(ACTION_NAME)
+                                                                             .parameters(words)
+                                                                             .blocking(true)
+                                                                             .results(true));
         Assert.assertEquals(result.get("js-result"), asList(sentence.split(" ")));
     }
 }

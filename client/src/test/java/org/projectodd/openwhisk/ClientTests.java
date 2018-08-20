@@ -23,8 +23,8 @@ public abstract class ClientTests {
     abstract void delete();
 
 
-    protected Map<String, String> mapOf(final String... strings) {
-        final Map<String, String> map = new LinkedHashMap<>();
+    protected Map<String, Object> mapOf(final String... strings) {
+        final Map<String, Object> map = new LinkedHashMap<>();
         for (int index = 0; index < strings.length - 1; index += 2) {
             map.put(strings[index], strings[index + 1]);
         }

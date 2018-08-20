@@ -72,17 +72,4 @@ class Utils {
         return newPut;
     }
 
-    static KeyValue keyValue(final String... strings) {
-        final KeyValue map = new KeyValue();
-        for (int index = 0; index < strings.length - 1; index += 2) {
-            map.put(strings[index], strings[index + 1]);
-        }
-        return map;
-    }
-
-    static KeyValue keyValue(final Map<String, String> map) {
-        final KeyValue keyValue = new KeyValue();
-        keyValue.putAll(map);
-        return keyValue;
-    }
 }

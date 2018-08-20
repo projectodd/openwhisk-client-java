@@ -1,6 +1,5 @@
 package org.projectodd.openwhisk;
 
-import org.projectodd.openwhisk.model.ActionExec;
 import org.projectodd.openwhisk.model.ActionExec.KindEnum;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,15 +24,16 @@ public class PythonActionTests extends ClientTests {
     @Test(dependsOnMethods = "delete")
     public void deploy() {
         client.actions()
-              .create(ACTION_NAME, new ActionExec()
-                                         .kind(KindEnum.PYTHON_2)
-                                         .code("../functions/src/main/python/split.py"));
+              .create(new ActionOptions(ACTION_NAME)
+                          .kind(KindEnum.PYTHON_2)
+                          .code("../functions/src/main/python/split.py"));
 
         final String sentence = "I'm a simple sentence.";
-        final Map<String, String> words = mapOf("words", sentence);
-        final Map<String, List<String>> result = client.actions().invoke(ACTION_NAME, words, new InvokeOptions()
-                                                                                .blocking(true)
-                                                                                .results(true));
+        final Map<String, Object> words = mapOf("words", sentence);
+        final Map<String, List<String>> result = client.actions().invoke(new InvokeOptions(ACTION_NAME)
+                                                                             .parameters(words)
+                                                                             .blocking(true)
+                                                                             .results(true));
         Assert.assertEquals(result.get("py-result"), asList(sentence.split(" ")));
     }
 }

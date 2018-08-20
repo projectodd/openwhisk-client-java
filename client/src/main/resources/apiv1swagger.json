@@ -1301,7 +1301,7 @@
     "definitions": {
         "KeyValue": {
             "additionalProperties": {
-                "type": "string"
+                "type": "object"
             }
         },
         "ItemId": {
