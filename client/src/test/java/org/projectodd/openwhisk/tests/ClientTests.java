@@ -1,5 +1,6 @@
-package org.projectodd.openwhisk;
+package org.projectodd.openwhisk.tests;
 
+import org.projectodd.openwhisk.OWskClient;
 import org.testng.annotations.AfterClass;
 
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ public abstract class ClientTests {
     public ClientTests() {
         client.configure(client.getConfiguration()
                                .from()
+//                               .debugging(true)
                                .insecure(true)
                                .build());
     }

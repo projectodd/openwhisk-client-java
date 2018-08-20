@@ -5,6 +5,8 @@ import org.projectodd.openwhisk.model.ActionExec.KindEnum;
 import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.KeyValue;
 
+import java.security.SecureRandom;
+
 public class ActionOptions {
     private final String name;
     private ActionPut actionPut = new ActionPut()
@@ -41,19 +43,15 @@ public class ActionOptions {
 
     public ActionOptions web(final boolean webEnabled) {
         if (webEnabled) {
-            final KeyValue keyValue = new KeyValue();
-            keyValue.put("web-export", true);
-            actionPut.addAnnotationsItem(keyValue);
+            putAnnotation("web-export", "true");
         }
         return this;
-
     }
+
 
     public ActionOptions webSecure(final boolean secure) {
         if (secure) {
-            final KeyValue keyValue = new KeyValue();
-            keyValue.put("web-export", true);
-            actionPut.addAnnotationsItem(keyValue);
+            putAnnotation("require-whisk-auth", genWebActionSecureKey());
         }
         return this;
 
@@ -66,5 +64,23 @@ public class ActionOptions {
 
     public boolean overwrite() {
         return overwrite;
+    }
+
+    private long genWebActionSecureKey() {
+        final SecureRandom random = new SecureRandom();
+        random.setSeed(System.currentTimeMillis());
+
+        long key = random.nextLong();
+        if (key < 0) {
+            key += Long.MAX_VALUE;
+        }
+        return key;
+    }
+
+    private void putAnnotation(final String key, final Object value) {
+        final KeyValue annotations = new KeyValue();
+        annotations.put("key", key);
+        annotations.put("value", value);
+        actionPut.addAnnotationsItem(annotations);
     }
 }

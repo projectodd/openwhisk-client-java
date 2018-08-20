@@ -1,5 +1,7 @@
-package org.projectodd.openwhisk;
+package org.projectodd.openwhisk.tests;
 
+import org.projectodd.openwhisk.ActionOptions;
+import org.projectodd.openwhisk.InvokeOptions;
 import org.projectodd.openwhisk.invoker.ApiException;
 import org.projectodd.openwhisk.model.ActionExec.KindEnum;
 import org.projectodd.openwhisk.model.Activation;

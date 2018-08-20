@@ -1,12 +1,10 @@
 package org.projectodd.openwhisk;
 
 import org.projectodd.openwhisk.invoker.ApiClient;
-
-import javax.net.ssl.TrustManager;
-import java.security.KeyManagementException;
+import org.projectodd.openwhisk.invoker.JSON;
 
 import static java.lang.String.format;
-import static okhttp3.internal.Util.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static okio.ByteString.encodeString;
 
 public class OWskClient {
@@ -18,24 +16,22 @@ public class OWskClient {
     }
 
     public void configure(final Configuration configuration) {
-        try {
-            this.configuration = configuration;
-            client = new ApiClient();
-            client.setBasePath(format("https://%s:%s/api/v1", configuration.getHost(), configuration.getPort()));
-            if(configuration.isInsecure()) {
-                client.getHttpClient().getSslContext()
-                      .init(null, new TrustManager[]{new MyX509TrustManager()}, new java.security.SecureRandom());
-            }
-            if(getConfiguration().getAuth()!= null) {
-                client.addDefaultHeader("Authorization", "Basic " + encodeString(getConfiguration().getAuth(), ISO_8859_1).base64());
-            }
-            client.setUserAgent("Incubating Apache OpenWhisk Java client");
-        } catch (KeyManagementException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        this.configuration = configuration;
+        client = new ApiClient();
+        client.setBasePath(format("https://%s:%s/api/v1", configuration.getHost(), configuration.getPort()));
+
+        final JSON json = client.getJSON();
+        json.setGson(json.getGson().newBuilder().disableHtmlEscaping().create());
+
+        client.setVerifyingSsl(!configuration.isInsecure());
+        if(getConfiguration().getAuth()!= null) {
+            client.addDefaultHeader("Authorization", "Basic " + encodeString(getConfiguration().getAuth(), ISO_8859_1).base64());
         }
+        client.setUserAgent("Incubating Apache OpenWhisk Java client");
+        client.setDebugging(configuration.isDebugging());
     }
 
-    Configuration getConfiguration() {
+    public Configuration getConfiguration() {
         return configuration;
     }
 
@@ -46,5 +42,4 @@ public class OWskClient {
     public Actions actions() {
         return new Actions(this);
     }
-
 }

@@ -1,6 +1,7 @@
-package org.projectodd.openwhisk;
+package org.projectodd.openwhisk.tests;
 
 import org.junit.After;
+import org.projectodd.openwhisk.ActionOptions;
 import org.projectodd.openwhisk.model.ActionExec.KindEnum;
 import org.testng.annotations.Test;
 
@@ -21,7 +22,7 @@ public class WebActionTests extends ClientTests {
         }
     }
 
-//    @Test(dependsOnMethods = "delete")
+    @Test(dependsOnMethods = "delete")
     public void createWebAction() {
         client.actions().create(new ActionOptions(ACTION_NAME)
                                     .kind(KindEnum.NODEJS_6)

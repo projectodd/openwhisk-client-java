@@ -22,6 +22,7 @@ public class Configuration {
     private String auth;
     private String namespace = DEFAULT_NAMESPACE;
     private String actionPackage = "";
+    private boolean debugging = false;
     private boolean insecure = false;
     private int timeout = DEFAULT_TIMEOUT;
 
@@ -29,18 +30,23 @@ public class Configuration {
     }
 
     private Configuration(final String host, final int port, final String auth, final String namespace, final String actionPackage,
-                          boolean insecure, final int timeout) {
+                          boolean debugging, boolean insecure, final int timeout) {
         this.host = host;
         this.port = port;
         this.auth = auth;
         this.namespace = namespace;
         this.actionPackage = actionPackage;
+        this.debugging = debugging;
         this.insecure = insecure;
         this.timeout = timeout;
     }
 
     public String getHost() {
         return host;
+    }
+
+    public boolean isDebugging() {
+        return debugging;
     }
 
     public boolean isInsecure() {
@@ -102,6 +108,7 @@ public class Configuration {
 
     public static class Builder {
         private String host = DEFAULT_HOST;
+        private boolean debugging;
         private boolean insecure;
         private int port = DEFAULT_PORT;
         private int timeout = DEFAULT_TIMEOUT;
@@ -123,6 +130,11 @@ public class Configuration {
 
         public Builder host(String host) {
             this.host = host;
+            return this;
+        }
+
+        public Builder debugging(boolean debugging) {
+            this.debugging = debugging;
             return this;
         }
 
@@ -156,7 +168,7 @@ public class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(host, port, auth, namespace, actionPackage, insecure, timeout);
+            return new Configuration(host, port, auth, namespace, actionPackage, debugging, insecure, timeout);
         }
     }
 }
