@@ -39,8 +39,12 @@ public class Actions {
     private ActionPut doUpdate(final ActionOptions options) {
         ActionPut put = Utils.encodeFile(options.toActionPut());
 
+        String namespace = options.name().getNamespace();
+        if(namespace == null) {
+            namespace = client.getConfiguration().getNamespace();
+        }
         final ActionPut result = new ActionsApi(client.getClient())
-                                     .updateAction(client.getConfiguration().getNamespace(), options.name(), put, options.overwrite());
+                                     .updateAction(namespace, options.name().getEntityName(), put, options.overwrite());
 
         final String code = result.getExec().getCode();
         final int length = code.length();

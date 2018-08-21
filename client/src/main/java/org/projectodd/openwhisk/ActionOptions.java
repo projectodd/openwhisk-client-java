@@ -8,16 +8,16 @@ import org.projectodd.openwhisk.model.KeyValue;
 import java.security.SecureRandom;
 
 public class ActionOptions {
-    private final String name;
+    private final QualifiedName name;
     private ActionPut actionPut = new ActionPut()
                                       .exec(new ActionExec());
     private boolean overwrite;
 
     public ActionOptions(final String name) {
-        this.name = name;
+        this.name = QualifiedName.qualifiedName(name);
     }
 
-    public String name() {
+    public QualifiedName name() {
         return name;
     }
 

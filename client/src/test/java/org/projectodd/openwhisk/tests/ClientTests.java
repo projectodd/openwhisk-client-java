@@ -24,7 +24,6 @@ public abstract class ClientTests {
 
     abstract void delete();
 
-
     protected Map<String, Object> mapOf(final String... strings) {
         final Map<String, Object> map = new LinkedHashMap<>();
         for (int index = 0; index < strings.length - 1; index += 2) {
