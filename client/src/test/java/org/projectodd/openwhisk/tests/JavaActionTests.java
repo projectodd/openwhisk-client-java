@@ -17,19 +17,13 @@ public class JavaActionTests extends ClientTests {
 
     @Test(expectedExceptions = ApiException.class)
     public void deleteNonExistent() {
-        try {
-            client.actions().delete(ACTION_NAME);
-        } catch (ApiException ignore) {
-        }
+        kill(ACTION_NAME);
         client.actions().delete(ACTION_NAME);
     }
 
     @Test
     public void delete() {
-        try {
-            client.actions().delete(ACTION_NAME);
-        } catch (ApiException ignore) {
-        }
+        kill(ACTION_NAME);
     }
 
     @Test(dependsOnMethods = "delete")
@@ -61,22 +55,20 @@ public class JavaActionTests extends ClientTests {
 
     @Test(dependsOnMethods = "create")
     public void invoke() {
-        Map<String, Object> params = mapOf("test", "hello");
-
         final String activationId = client.actions().invoke(new InvokeOptions(ACTION_NAME)
                                                                 .parameter("test", "hello"));
         Assert.assertNotNull(activationId);
 
         final Activation activation = client.actions().invoke(new InvokeOptions(ACTION_NAME)
                                                                   .blocking(true)
-                                                                  .parameters(params));
+                                                                  .parameter("test", "hello"));
         Assert.assertNotNull(activation.getActivationId());
         Assert.assertNotNull(activation.getResponse());
 
         Map results = client.actions().invoke(new InvokeOptions(ACTION_NAME)
                                                   .blocking(true)
                                                   .results(true)
-                                                  .parameters(params));
+                                                  .parameter("test", "hello"));
         Assert.assertNotNull(results);
         Assert.assertNotNull(results.get("echoed"));
     }

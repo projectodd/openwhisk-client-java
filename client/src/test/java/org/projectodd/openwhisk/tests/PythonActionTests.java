@@ -17,10 +17,7 @@ public class PythonActionTests extends ClientTests {
 
     @Test
     public void delete() {
-        try {
-            client.actions().delete(ACTION_NAME);
-        } catch (Exception ignore) {
-        }
+        kill(ACTION_NAME);
     }
 
     @Test(dependsOnMethods = "delete")
@@ -31,9 +28,8 @@ public class PythonActionTests extends ClientTests {
                           .code("../functions/src/main/python/split.py"));
 
         final String sentence = "I'm a simple sentence.";
-        final Map<String, Object> words = mapOf("words", sentence);
         final Map<String, List<String>> result = client.actions().invoke(new InvokeOptions(ACTION_NAME)
-                                                                             .parameters(words)
+                                                                             .parameter("words", sentence)
                                                                              .blocking(true)
                                                                              .results(true));
         Assert.assertEquals(result.get("py-result"), asList(sentence.split(" ")));
