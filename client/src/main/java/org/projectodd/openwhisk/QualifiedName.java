@@ -50,10 +50,13 @@ public class QualifiedName {
      * is also resolved from the property file.
      * <p>
      * Examples:
-     * foo => qualifiedName {namespace: "_", entityName: foo}
-     * pkg/foo => qualifiedName {namespace: "_", entityName: pkg/foo}
-     * /ns/foo => qualifiedName {namespace: ns, entityName: foo}
-     * /ns/pkg/foo => qualifiedName {namespace: ns, entityName: pkg/foo}
+     * foo =&gt; qualifiedName {namespace: "_", entityName: foo}
+     * pkg/foo =&gt; qualifiedName {namespace: "_", entityName: pkg/foo}
+     * /ns/foo =&gt; qualifiedName {namespace: ns, entityName: foo}
+     * /ns/pkg/foo =&gt; qualifiedName {namespace: ns, entityName: pkg/foo}
+     *
+     * @param name the name to parse
+     * @return the new QualifiedName
      */
     public static QualifiedName qualifiedName(String name) {
         final QualifiedName qualifiedName = new QualifiedName();

@@ -19,6 +19,7 @@ public class Actions {
      * Create a new action
      *
      * @param options the options to apply
+     * @return the new action
      */
     public ActionPut create(final ActionOptions options) {
         return doUpdate(options.overwrite(false));
@@ -27,6 +28,7 @@ public class Actions {
     /**
      * Update an existing action, or create an action if it does not exist
      * @param options the options to apply
+     * @return the action
      */
     public ActionPut update(final ActionOptions options) {
         return doUpdate(options.overwrite(true));
@@ -58,6 +60,7 @@ public class Actions {
      * Invoke an action
      *
      * @param options the options to apply
+     * @param <T> the type to return
      * @return the invocation response
      */
     @SuppressWarnings("unchecked")
@@ -81,6 +84,7 @@ public class Actions {
      *
      * @param name the name of the action to fetch
      * @param includeCode true if the code content of the action is to be included in the returned value
+     * @return the action
      */
     public Action get(final String name, final boolean includeCode) {
         return new ActionsApi(client.getClient())
