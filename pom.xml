@@ -4,7 +4,7 @@
 
     <groupId>org.projectodd.openwhisk</groupId>
     <artifactId>openwhisk-client-java</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
 
     <name>openwhisk-client-java</name>
@@ -14,7 +14,7 @@
         <connection>scm:git:git@github.com:projectodd/openwhisk-client-java.git</connection>
         <developerConnection>scm:git:git@github.com:projectodd/openwhisk-client-java.git</developerConnection>
         <url>git@github.com:projectodd/openwhisk-client-java.git</url>
-      <tag>HEAD</tag>
+      <tag>openwhisk-client-java-0.4</tag>
   </scm>
 
     <description>A Java client for invoking and managing Apache OpenWhisk actions</description>
