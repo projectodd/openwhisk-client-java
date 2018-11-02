@@ -16,10 +16,7 @@ public class WebActionTests extends ClientTests {
 
     @Test
     public void delete() {
-        try {
-            client.actions().delete(ACTION_NAME);
-        } catch (Exception ignore) {
-        }
+        kill(ACTION_NAME);
     }
 
     @Test(dependsOnMethods = "delete")

@@ -22,13 +22,6 @@ public class JsActionTests extends ClientTests {
         kill(ACTION_NAME);
     }
 
-    private void kill(final String actionName) {
-        try {
-            client.actions().delete(actionName);
-        } catch (Exception ignore) {
-        }
-    }
-
     @Test(dependsOnMethods = "delete")
     public void deploy() {
         client.actions()
@@ -37,9 +30,8 @@ public class JsActionTests extends ClientTests {
                           .code("../functions/src/main/js/split.js"));
 
         final String sentence = "I'm a simple sentence.";
-        final Map<String, Object> words = mapOf("words", sentence);
         final Map<String, List<String>> result = client.actions().invoke(new InvokeOptions(ACTION_NAME)
-                                                                             .parameters(words)
+                                                                             .parameter("words", sentence)
                                                                              .blocking(true)
                                                                              .results(true));
         Assert.assertEquals(result.get("js-result"), asList(sentence.split(" ")));
