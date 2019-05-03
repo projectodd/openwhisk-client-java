@@ -3,3 +3,8 @@ target/
 *.iml
 pom.xml.versionsBackup
 dependency-reduced-pom.xml
+.settings
+.classpath
+.project
+bin/
+
