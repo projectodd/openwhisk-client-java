@@ -66,6 +66,11 @@ public class ActionOptions {
         return overwrite;
     }
 
+    public ActionOptions image(final String image) {
+        actionPut.getExec().image(image);
+        return this;
+    }
+
     private long genWebActionSecureKey() {
         final SecureRandom random = new SecureRandom();
         random.setSeed(System.currentTimeMillis());
