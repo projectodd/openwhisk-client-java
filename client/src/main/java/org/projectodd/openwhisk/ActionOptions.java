@@ -43,7 +43,7 @@ public class ActionOptions {
 
     public ActionOptions web(final boolean webEnabled) {
         if (webEnabled) {
-            putAnnotation("web-export", "true");
+            putAnnotation("web-export", true);
         }
         return this;
     }
