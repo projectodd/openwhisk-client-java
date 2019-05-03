@@ -12,6 +12,7 @@ public class ActionOptions {
     private ActionPut actionPut = new ActionPut()
                                       .exec(new ActionExec());
     private boolean overwrite;
+    private long webSecureKey;
 
     public ActionOptions(final String name) {
         this.name = QualifiedName.qualifiedName(name);
@@ -51,10 +52,19 @@ public class ActionOptions {
 
     public ActionOptions webSecure(final boolean secure) {
         if (secure) {
-            putAnnotation("require-whisk-auth", genWebActionSecureKey());
+            putSecurityAnnotation(genWebActionSecureKey());
         }
         return this;
 
+    }
+
+    public ActionOptions webSecure(final long key) {
+        putSecurityAnnotation(key);
+        return this;
+    }
+
+    public long webSecureKey() {
+        return webSecureKey;
     }
 
     public ActionOptions overwrite(final boolean overwrite) {
@@ -75,6 +85,11 @@ public class ActionOptions {
             key += Long.MAX_VALUE;
         }
         return key;
+    }
+
+    private void putSecurityAnnotation(final long key) {
+        webSecureKey = key;
+        putAnnotation("require-whisk-auth", key);
     }
 
     private void putAnnotation(final String key, final Object value) {
