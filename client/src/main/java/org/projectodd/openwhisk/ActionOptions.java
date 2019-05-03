@@ -2,6 +2,7 @@ package org.projectodd.openwhisk;
 
 import org.projectodd.openwhisk.model.ActionExec;
 import org.projectodd.openwhisk.model.ActionExec.KindEnum;
+import org.projectodd.openwhisk.model.ActionLimits;
 import org.projectodd.openwhisk.model.ActionPut;
 import org.projectodd.openwhisk.model.KeyValue;
 
@@ -10,7 +11,8 @@ import java.security.SecureRandom;
 public class ActionOptions {
     private final QualifiedName name;
     private ActionPut actionPut = new ActionPut()
-                                      .exec(new ActionExec());
+                                      .exec(new ActionExec())
+                                      .limits(new ActionLimits());
     private boolean overwrite;
     private long webSecureKey;
 
@@ -90,6 +92,11 @@ public class ActionOptions {
             key += Long.MAX_VALUE;
         }
         return key;
+    }
+
+    public ActionOptions memory(final int memoryLimit) {
+        actionPut.getLimits().memory(memoryLimit);
+        return this;
     }
 
     private void putSecurityAnnotation(final long key) {
