@@ -1333,7 +1333,7 @@
                 "timeout": {
                     "type": "integer",
                     "format": "int32",
-                    "default": 30000
+                    "default": 60000
                 },
                 "memory": {
                     "type": "integer",
