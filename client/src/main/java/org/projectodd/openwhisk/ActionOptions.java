@@ -77,6 +77,11 @@ public class ActionOptions {
         return key;
     }
 
+    public ActionOptions timeout(final int timeoutLimit) {
+        actionPut.getLimits().timeout(timeoutLimit);
+        return this;
+    }
+
     private void putAnnotation(final String key, final Object value) {
         final KeyValue annotations = new KeyValue();
         annotations.put("key", key);
