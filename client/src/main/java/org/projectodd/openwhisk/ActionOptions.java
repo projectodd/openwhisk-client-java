@@ -94,6 +94,11 @@ public class ActionOptions {
         return key;
     }
 
+    public ActionOptions timeout(final int timeoutLimit) {
+        actionPut.getLimits().timeout(timeoutLimit);
+        return this;
+    }
+
     public ActionOptions memory(final int memoryLimit) {
         actionPut.getLimits().memory(memoryLimit);
         return this;
