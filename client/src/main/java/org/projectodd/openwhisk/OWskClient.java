@@ -42,4 +42,8 @@ public class OWskClient {
     public Actions actions() {
         return new Actions(this);
     }
+
+    public Activations activations() {
+        return new Activations(this);
+    }
 }
