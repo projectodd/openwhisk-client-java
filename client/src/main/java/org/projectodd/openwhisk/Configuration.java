@@ -3,6 +3,8 @@ package org.projectodd.openwhisk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class Configuration {
@@ -20,6 +22,10 @@ public class Configuration {
     private String host = "localhost";
     private int port = DEFAULT_PORT;
     private String auth;
+    private boolean useOauth;
+    private String oauthTokenUrl;
+    private Map<String, String> oauthTokenRequestParameters;
+    private Map<String, String> oauthTokenRequestHeaders;
     private String namespace = DEFAULT_NAMESPACE;
     private String actionPackage = "";
     private boolean debugging = false;
@@ -29,11 +35,19 @@ public class Configuration {
     private Configuration() {
     }
 
-    private Configuration(final String host, final int port, final String auth, final String namespace, final String actionPackage,
+    private Configuration(final String host, final int port, final String auth, final boolean useOauth,
+            final String oauthTokenUrl,
+            final Map<String, String> oauthTokenRequestParameters,
+            final Map<String, String> oauthTokenRequestHeaders,
+            final String namespace, final String actionPackage,
                           boolean debugging, boolean insecure, final int timeout) {
         this.host = host;
         this.port = port;
         this.auth = auth;
+        this.useOauth = useOauth;
+        this.oauthTokenUrl = oauthTokenUrl;
+        this.oauthTokenRequestParameters = oauthTokenRequestParameters;
+        this.oauthTokenRequestHeaders = oauthTokenRequestHeaders;
         this.namespace = namespace;
         this.actionPackage = actionPackage;
         this.debugging = debugging;
@@ -59,6 +73,22 @@ public class Configuration {
 
     public String getAuth() {
         return auth;
+    }
+
+    public boolean useOauth() {
+        return useOauth;
+    }
+
+    public String getOauthTokenUrl() {
+        return oauthTokenUrl;
+    }
+
+    public Map<String, String> getOauthTokenRequestParameters() {
+        return new HashMap<>(oauthTokenRequestParameters);
+    }
+
+    public Map<String, String> getOauthTokenRequestHeaders() {
+        return new HashMap<>(oauthTokenRequestHeaders);
     }
 
     public String getNamespace() {
@@ -113,6 +143,10 @@ public class Configuration {
         private int port = DEFAULT_PORT;
         private int timeout = DEFAULT_TIMEOUT;
         private String auth;
+        private boolean useOauth;
+        private String oauthTokenUrl;
+        private Map<String, String> oauthTokenRequestParameters;
+        private Map<String, String> oauthTokenRequestHeaders;
         private String namespace = DEFAULT_NAMESPACE;
         private String actionPackage = DEFAULT_ACTION_PACKAGE;
 
@@ -123,6 +157,10 @@ public class Configuration {
             host = configuration.host;
             port = configuration.port;
             auth = configuration.auth;
+            useOauth = configuration.useOauth;
+            oauthTokenUrl = configuration.oauthTokenUrl;
+            oauthTokenRequestParameters = configuration.oauthTokenRequestParameters;
+            oauthTokenRequestHeaders = configuration.oauthTokenRequestHeaders;
             namespace = configuration.namespace;
             actionPackage = configuration.actionPackage;
             insecure = configuration.insecure;
@@ -157,6 +195,30 @@ public class Configuration {
             return this;
         }
 
+        public Builder useOauth(boolean useOauth) {
+            this.useOauth = useOauth;
+            return this;
+        }
+
+        public Builder oauthTokenUrl(String oauthTokenUrl) {
+            this.oauthTokenUrl = oauthTokenUrl;
+            return this;
+        }
+
+        public Builder oauthTokenRequestParameters(
+                Map<String, String> requestParameters) {
+            this.oauthTokenRequestParameters = new HashMap<>(
+                    requestParameters);
+            return this;
+        }
+
+        public Builder oauthTokenRequestHeaders(
+                Map<String, String> requestHeaders) {
+            this.oauthTokenRequestHeaders = new HashMap<>(
+                    requestHeaders);
+            return this;
+        }
+
         public Builder namespace(String namespace) {
             this.namespace = namespace;
             return this;
@@ -168,7 +230,14 @@ public class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(host, port, auth, namespace, actionPackage, debugging, insecure, timeout);
+            if (useOauth && (oauthTokenUrl == null
+                    || oauthTokenUrl.isEmpty())) {
+                throw new IllegalStateException(
+                        "No URL provided to request Oauth token");
+            }
+            return new Configuration(host, port, auth, useOauth, oauthTokenUrl,
+                    oauthTokenRequestParameters, oauthTokenRequestHeaders,
+                    namespace, actionPackage, debugging, insecure, timeout);
         }
     }
 }
